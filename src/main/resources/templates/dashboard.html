@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<!--
+Created by Maurice Johnson - 2021
+-->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>NFT App</title>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/index.css" rel="stylesheet">
+    <script src="js/index.js"></script>
+</head>
+<body>
+<div th:insert="nav :: navFrag"></div>
+<div class="container" style="overflow: hidden; white-space: normal">
+    <div class="container" style="width: 850px">
+        <h3 th:text="'Welcome '+${loggedInUser.getUsername()}"></h3>
+        <h5 th:text="'Portfolio value: '+${#numbers.formatDecimal(loggedInUser.getPortfolio().getAmount(), 1, 'COMMA', 2, 'POINT')}+' ETH'"></h5>
+        <br><br>
+        <form th:action="@{/add/collection}" method="post">
+            <label for="nftAddr">NFT Collection Address</label>:<br>
+            <div class="row justify-content-center">
+                <div class="col-sm">
+            <input type="text" style="display: inline;" id="nftAddr" name="nftAddr" class="form-control" placeholder="NFT Collection Address"/>
+                </div>
+                <div class="col-sm">
+                <input type="text" style="display: inline;" id="quantity" name="quantity" class="form-control" placeholder="Quantity"/>
+                </div>
+                <div class="col-sm">
+                <input type="submit" style="width: 125px" name="login-submit" class="form-control btn btn-primary" value="Add Address"/>
+                </div>
+            </div>
+            <span class="inputError" th:if="${addAddrError.length() > 0}" th:text="${addAddrError}"></span>
+        </form>
+        <br>
+        <br>
+        <div class="container" th:if="${loggedInUser.getPortfolio().getCollection().size() > 0}">
+            <div th:each="nft : ${loggedInUser.getPortfolio().getCollection()}">
+                <div class="row align-items-center">
+                    <div class="col-md">
+                        <h1 th:text="${nft.getName()}"></h1>
+                    </div>
+                    <div class="col-md">
+                        <form align="right" th:action="@{/delete/collection/{id}(id=${nft.getId()})}" method="post">
+                            <input style="width: 75px" type="submit" name="login-submit"
+                                   th:data-confirm-delete="'Are you sure you want to delete '+${nft.getName()}+'?'"
+                                   class="form-control btn btn-danger" value="Delete"
+                                   onclick="if (!confirm(this.getAttribute('data-confirm-delete'))) return false"
+                            />
+                        </form>
+                    </div>
+                </div>
+                <br>
+                <a th:href="${'/collection?addr='+nft.getEthAddress()}" th:text="${nft.getEthAddress()}"></a>
+                <h6 th:text="'Floor Price: '+${nft.getFloorPrice()}+' ETH'"></h6>
+                <p th:text="'Quantity Owned: '+${nft.getQuantity()}"></p>
+                <br>
+                <br>
+            </div>
+        </div>
+        <br><br><br>
+        <form th:action="@{/deactivate}" method="post">
+            <div align="center">
+                <input type="submit" style="width: 135px" name="login-submit"
+                       data-confirm-delete="Are you sure you want to your account? You will no longer be able to access your account once you do so."
+                       class="form-control btn btn-danger"
+                       onclick="if (!confirm(this.getAttribute('data-confirm-delete'))) return false"
+                       value="Delete Account"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+</body>
+</html>

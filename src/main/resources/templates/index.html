@@ -12,19 +12,9 @@ Created by Maurice Johnson - 2021
     <script src="js/index.js"></script>
 </head>
 <body>
-
+<div th:insert="nav :: navFrag"></div>
 <div class="container">
-    <h1>Welcome...</h1>
-    <div class="container" th:if="${error != null && addr != null}">
-        <p th:text="${error}"></p>
-    </div>
-    <div class="container" th:if="${osResponse != null}">
-    <h1 th:text="${osResponse.getAssetContract().getName()}"></h1>
-    <img th:src="${osResponse.getImageUrl()}" />
-    <p th:text="${osResponse.getAssetContract().getAddress()}"></p>
-    <p th:text="${osResponse.getAssetContract().getDescription()}"></p>
-    <p th:text="'Floor Price: '+${osResponse.getCollection().getStats().getFloorPrice()}"></p>
-    </div>
+    <h1>Welcome to NFT App</h1>
 </div>
 
 
